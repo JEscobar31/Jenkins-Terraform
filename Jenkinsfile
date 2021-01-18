@@ -1,26 +1,27 @@
 properties([pipelineTriggers([githubPush()])])
 
 pipeline {
-    agent { 
-      docker {
-        image 'hashicorp/terraform'
-        args  '--entrypoint='
-      }
+    agent {
+        docker {
+            image 'hashicorp/terraform'
+            args '--entrypoint='
+        }
     }
-    
-    stages('TF init) {
-    steps {
-       sh 'terraform init'
-    }
-    }
-    stages('TF plan'){
-    steps {
-       sh 'terraform plan'
-    }
-    }
-    stages('TF apply'){
-    steps{
-       sh 'terraform apply -auto-approve'
-    }
+    stages {
+        stage('Init Terraform directory') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+        stage('Plan terraform code') {
+            steps {
+                sh 'terraform plan'
+            }
+        }
+        stage('Apply terraform code') {
+            steps {
+                sh 'terraform apply -auto-approve'
+            }
+        }
     }
 }
